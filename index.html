@@ -7,12 +7,16 @@
   // Add your code here
   var proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
-  function loadUrl(url) {
-    if (!url) {
-      // If no URL is provided, use the one in the input field
-      url = document.getElementById("url-input").value;
-    }
+    function loadUrl(url) {
+      // If url is not provided, get value from input field
+      if (!url) {
+        var urlInput = document.getElementById('url-input');
+        url = urlInput.value;
+      }
 
+
+    // Only fetch if URL is valid
+  if (url) {
     // Add the CORS Anywhere proxy URL to the original URL
     url = proxyUrl + url;
 
@@ -40,6 +44,7 @@
     };
     xhr.send();
   }
+}
 
   // Intercept link clicks and fetch the linked pages
   document.addEventListener("click", function(event) {
