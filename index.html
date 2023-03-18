@@ -3,14 +3,15 @@
 <head>
     <title>Proxy Website</title>
     <script>
-        function loadUrl() {
-            // Get the URL from the input field
-            var url = document.getElementById("url-input").value;
-
+        function loadUrl(url) {
+            if (!url) {
+                // If no URL is provided, use the one in the input field
+                url = document.getElementById("url-input").value;
+            }
+      
             // Add the CORS Anywhere proxy URL to the original URL
             url = "https://cors-anywhere.herokuapp.com/" + url;
 
-            // Create a new XMLHttpRequest object and send a GET request
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url, true);
             xhr.onreadystatechange = function() {
@@ -21,18 +22,25 @@
                     // Set the fetched content to the div element
                     var responseDiv = document.getElementById("response");
                     responseDiv.innerHTML = cleanResponse;
+
+                    // Intercept link clicks and fetch linked pages
+                    var fetchedLinks = responseDiv.getElementsByTagName("a");
+                    for (var i = 0; i < fetchedLinks.length; i++) {
+                        fetchedLinks[i].addEventListener("click", function(event) {
+                            event.preventDefault();
+                            var link = this.href;
+                            loadUrl(link);
+                        });
+                    }
                 }
             };
             xhr.send();
         }
 
-        // Intercept link clicks and load the linked page through the proxy
-        document.addEventListener("click", function(event) {
-            var element = event.target;
-            if (element.tagName === "A") {
-                event.preventDefault();
-                loadUrl(element.href);
-            }
+        // Intercept form submit events and fetch the entered URL
+        document.getElementById("url-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            loadUrl();
         });
 
         // Perform basic sanitization of fetched content
@@ -46,8 +54,10 @@
 </head>
 <body>
     <h1>Proxy Website</h1>
-    <input id="url-input" type="text" placeholder="Enter URL">
-    <button onclick="loadUrl()">Go</button>
+    <form id="url-form">
+        <input id="url-input" type="text" placeholder="Enter URL">
+        <button type="submit">Go</button>
+    </form>
     <div id="response"></div>
 </body>
 </html>
