@@ -3,9 +3,24 @@
 <head>
     <title>Proxy Website</title>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+  document.head.querySelectorAll('[name="X-Powered-By"], [name="x-powered-by"]').forEach(function(elem) {
+    elem.remove();
+  });
+});
+        
+        var xhr = new XMLHttpRequest();
+xhr.open('GET', document.location.href, true);
+xhr.setRequestHeader('X-Forwarded-For', '0.0.0.0');
+xhr.onload = function() {
+  // Do something with the response
+};
+xhr.send();
+        
         window.addEventListener("load", function() {
   // Add your code here
   var proxyUrl = "https://cors-anywhere.herokuapp.com/";
+            
 
     function loadUrl(url) {
       // If url is not provided, get value from input field
