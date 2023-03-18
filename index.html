@@ -9,5 +9,15 @@
     <input id="url-input" type="text" placeholder="Enter URL">
     <button onclick="loadUrl()">Go</button>
     <div id="response"></div>
+    <script>
+        // Intercept link clicks and load the linked page through the proxy
+        document.addEventListener("click", function(event) {
+            var element = event.target;
+            if (element.tagName === "A") {
+                event.preventDefault();
+                loadUrl(element.href);
+            }
+        });
+    </script>
 </body>
 </html>
