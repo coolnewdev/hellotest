@@ -3,14 +3,16 @@
 <head>
     <title>Proxy Website</title>
     <script>
+        var proxyUrl = "https://cors-anywhere.herokuapp.com/";
+
         function loadUrl(url) {
             if (!url) {
                 // If no URL is provided, use the one in the input field
                 url = document.getElementById("url-input").value;
             }
-      
+
             // Add the CORS Anywhere proxy URL to the original URL
-            url = "https://cors-anywhere.herokuapp.com/" + url;
+            url = proxyUrl + url;
 
             var xhr = new XMLHttpRequest();
             xhr.open("GET", url, true);
@@ -37,10 +39,27 @@
             xhr.send();
         }
 
+        // Intercept link clicks and fetch the linked pages
+        document.addEventListener("click", function(event) {
+            var element = event.target;
+            if (element.tagName === "A") {
+                event.preventDefault();
+                loadUrl(element.href);
+            }
+        });
+
+        // Intercept popstate events and fetch the corresponding URLs
+        window.addEventListener("popstate", function(event) {
+            var url = event.state ? event.state.url : null;
+            loadUrl(url);
+        });
+
         // Intercept form submit events and fetch the entered URL
         document.getElementById("url-form").addEventListener("submit", function(event) {
             event.preventDefault();
-            loadUrl();
+            var url = document.getElementById("url-input").value;
+            history.pushState({url: url}, "", url);
+            loadUrl(url);
         });
 
         // Perform basic sanitization of fetched content
