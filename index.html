@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello World</title>
+    <title>Proxy Website</title>
+    <script src="proxy.js"></script>
 </head>
 <body>
-  <h1> Website</h1>
-  <form>
-    <label for="url">Enter:</label>
-    <input type="text" id="url">
-    <button type="submit" onclick="fetchURL()">Hello</button>
-  </form>
-  <div id="result"></div>
-  <script src="script.js"></script>
+    <h1>Proxy Website</h1>
+    <input id="url-input" type="text" placeholder="Enter URL">
+    <button onclick="loadUrl()">Go</button>
+    <div id="response"></div>
 </body>
 </html>
