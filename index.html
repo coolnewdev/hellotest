@@ -2,14 +2,25 @@
 <html>
 <head>
     <title>Proxy Website</title>
-    <script src="proxy.js"></script>
-</head>
-<body>
-    <h1>Proxy Website</h1>
-    <input id="url-input" type="text" placeholder="Enter URL">
-    <button onclick="loadUrl()">Go</button>
-    <div id="response"></div>
     <script>
+        function loadUrl() {
+            // Get the URL from the input field
+            var url = document.getElementById("url-input").value;
+
+            // Add the CORS Anywhere proxy URL to the original URL
+            url = "https://cors-anywhere.herokuapp.com/" + url;
+
+            // Create a new XMLHttpRequest object and send a GET request
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById("response").innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+
         // Intercept link clicks and load the linked page through the proxy
         document.addEventListener("click", function(event) {
             var element = event.target;
@@ -19,5 +30,11 @@
             }
         });
     </script>
+</head>
+<body>
+    <h1>Proxy Website</h1>
+    <input id="url-input" type="text" placeholder="Enter URL">
+    <button onclick="loadUrl()">Go</button>
+    <div id="response"></div>
 </body>
 </html>
