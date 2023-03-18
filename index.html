@@ -15,7 +15,12 @@
             xhr.open("GET", url, true);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
-                    document.getElementById("response").innerHTML = xhr.responseText;
+                    // Sanitize the fetched content to prevent XSS attacks
+                    var cleanResponse = sanitizeResponse(xhr.responseText);
+
+                    // Set the fetched content to the div element
+                    var responseDiv = document.getElementById("response");
+                    responseDiv.innerHTML = cleanResponse;
                 }
             };
             xhr.send();
@@ -29,6 +34,14 @@
                 loadUrl(element.href);
             }
         });
+
+        // Perform basic sanitization of fetched content
+        function sanitizeResponse(responseText) {
+            // Remove any <script> tags and event handlers to prevent script injection attacks
+            var sanitizedText = responseText.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "");
+            sanitizedText = sanitizedText.replace(/(on\w+)=['"](?:\\[\\']|[^\\'"])*['"]/gi, "");
+            return sanitizedText;
+        }
     </script>
 </head>
 <body>
